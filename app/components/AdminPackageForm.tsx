@@ -172,6 +172,29 @@ export default function AdminPackageForm({ initialData, onSuccess }: AdminPackag
                 )}
             </div>
 
+            {initialData && (
+                <div className="border-t pt-4">
+                    <h3 className="font-bold text-gray-900 mb-4">🔄 Status Paket</h3>
+                    <div className="flex items-center gap-4">
+                        <button
+                            type="button"
+                            onClick={() => setStatus(status === 'waiting' ? 'received' : 'waiting')}
+                            className={clsx(
+                                "px-4 py-2 rounded-lg font-bold transition-all border-2",
+                                status === 'received' ? "bg-green-50 border-green-500 text-green-600" : "bg-yellow-50 border-yellow-500 text-yellow-600"
+                            )}
+                        >
+                            {status === 'received' ? '✅ SUDAH DITERIMA' : '⏳ MENUNGGU'}
+                        </button>
+                        <div className="text-sm text-gray-500">
+                            {status === 'waiting'
+                                ? 'Paket akan kembali muncul sebagai "belum diterima".'
+                                : 'Paket ditandai sebagai sudah selesai.'}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="pt-4 flex items-center justify-between">
                 {message && <p className={clsx("text-sm font-bold", message.includes('ksalahan') ? "text-red-500" : "text-green-600")}>{message}</p>}
 
