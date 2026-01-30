@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Package, Check, Truck, Box, AlertCircle, ShoppingBag } from 'lucide-react';
 import { markPackageAsReceived } from '../lib/actions';
 import TrackingModal from './TrackingModal';
+import ReceiveModal from './ReceiveModal';
 import clsx from 'clsx';
 
 interface PackageCardProps {
@@ -17,11 +18,13 @@ interface PackageCardProps {
         isCod: boolean;
         codAmount: number | null;
         deliveryStatus: string;
+        receiverName?: string | null;
     };
 }
 
 export default function PackageCard({ pkg }: PackageCardProps) {
     const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+    const [isReceiveOpen, setIsReceiveOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const isReceived = pkg.deliveryStatus === 'received';
@@ -36,17 +39,17 @@ export default function PackageCard({ pkg }: PackageCardProps) {
         return 'https://google.com/search?q=cek+resi+' + courier + '+' + trackingNumber;
     };
 
-    const handleReceived = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.checked) {
-            const confirm = window.confirm('Tandai paket ini sebagai sudah diterima?');
-            if (!confirm) {
-                e.target.checked = false;
-                return;
-            }
-            setLoading(true);
-            await markPackageAsReceived(pkg.id);
-            setLoading(false);
+    const handleReceivedClick = () => {
+        if (!isReceived) {
+            setIsReceiveOpen(true);
         }
+    };
+
+    const handleConfirmReceive = async (name: string) => {
+        setLoading(true);
+        await markPackageAsReceived(pkg.id, name);
+        setLoading(false);
+        setIsReceiveOpen(false);
     };
 
     return (
@@ -113,6 +116,11 @@ export default function PackageCard({ pkg }: PackageCardProps) {
                             <div className="text-gray-900 font-medium">
                                 {pkg.recipientPhone.replace(/.(?=.{4})/g, '•')}
                             </div>
+                            {pkg.receiverName && (
+                                <div className="mt-1 text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded inline-block border border-green-100">
+                                    Diterima oleh: {pkg.receiverName}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -133,7 +141,7 @@ export default function PackageCard({ pkg }: PackageCardProps) {
                             <input
                                 type="checkbox"
                                 checked={isReceived}
-                                onChange={handleReceived}
+                                onChange={handleReceivedClick}
                                 disabled={isReceived || loading}
                                 className="w-5 h-5 rounded text-green-600 focus:ring-green-500"
                             />
@@ -148,6 +156,13 @@ export default function PackageCard({ pkg }: PackageCardProps) {
                 onClose={() => setIsTrackingOpen(false)}
                 phone={pkg.recipientPhone}
                 trackingUrl={getTrackingUrl(pkg.courier, pkg.trackingNumber)}
+            />
+
+            <ReceiveModal
+                isOpen={isReceiveOpen}
+                onClose={() => setIsReceiveOpen(false)}
+                onConfirm={handleConfirmReceive}
+                loading={loading}
             />
         </>
     );

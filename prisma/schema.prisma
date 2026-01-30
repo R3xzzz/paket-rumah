@@ -19,6 +19,7 @@ model Package {
   isCod          Boolean
   codAmount      Float?
   deliveryStatus String   @default("waiting")
+  receiverName   String?
   createdAt      DateTime @default(now())
 }
 

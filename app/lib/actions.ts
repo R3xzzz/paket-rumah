@@ -53,10 +53,13 @@ export async function getPackages(query?: string) {
     });
 }
 
-export async function markPackageAsReceived(id: number) {
+export async function markPackageAsReceived(id: number, receiverName: string) {
     await prisma.package.update({
         where: { id },
-        data: { deliveryStatus: 'received' },
+        data: {
+            deliveryStatus: 'received',
+            receiverName,
+        },
     });
     revalidatePath('/');
 }
