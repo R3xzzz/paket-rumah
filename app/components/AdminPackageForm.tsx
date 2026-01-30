@@ -16,6 +16,7 @@ interface AdminPackageFormProps {
 export default function AdminPackageForm({ initialData, onSuccess }: AdminPackageFormProps) {
     const [loading, setLoading] = useState(false);
     const [isCod, setIsCod] = useState(initialData?.isCod || false);
+    const [status, setStatus] = useState(initialData?.deliveryStatus || 'waiting');
     const [message, setMessage] = useState('');
 
     async function handleSubmit(formData: FormData) {
@@ -32,6 +33,8 @@ export default function AdminPackageForm({ initialData, onSuccess }: AdminPackag
                 recipientPhone: formData.get('recipientPhone') as string,
                 isCod: isCod,
                 codAmount: isCod ? Number(formData.get('codAmount')) : undefined,
+                deliveryStatus: status,
+                receiverName: status === 'waiting' ? null : initialData?.receiverName, // Clear receiver if waiting
             };
 
             if (initialData) {

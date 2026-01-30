@@ -54,7 +54,7 @@ export default function ReceiveModal({ isOpen, onClose, onConfirm, loading }: Re
                             }}
                             placeholder="Contoh: Ibu, Ayah, Budi"
                             className={clsx(
-                                "w-full px-4 py-3 rounded-xl border-2 focus:ring-4 focus:ring-blue-100 transition-all outline-none font-medium",
+                                "w-full px-4 py-3 rounded-xl border-2 focus:ring-4 focus:ring-blue-100 transition-all outline-none font-medium text-gray-900 bg-white",
                                 error ? "border-red-300 focus:border-red-400 focus:ring-red-100" : "border-gray-200 focus:border-blue-400"
                             )}
                             autoFocus
