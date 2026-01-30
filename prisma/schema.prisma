@@ -20,6 +20,7 @@ model Package {
   codAmount      Float?
   deliveryStatus String   @default("waiting")
   receiverName   String?
+  receivedAt     DateTime?
   createdAt      DateTime @default(now())
 }
 

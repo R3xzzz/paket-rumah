@@ -19,7 +19,7 @@ export default async function AdminPage({
         redirect('/admin/login');
     }
 
-    const packages = await getPackages();
+    const packages = await getPackages(undefined, true);
 
     const sp = await searchParams;
     const editId = sp?.editId ? parseInt(sp.editId) : null;

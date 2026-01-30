@@ -59,6 +59,7 @@ export async function markPackageAsReceived(id: number, receiverName: string) {
         data: {
             deliveryStatus: 'received',
             receiverName,
+            receivedAt: new Date(),
         },
     });
     revalidatePath('/');
@@ -121,6 +122,13 @@ export async function deletePackage(id: number) {
 }
 
 export async function updatePackage(id: number, data: any) {
+    // Handle receivedAt timestamp logic
+    if (data.deliveryStatus === 'received') {
+        data.receivedAt = new Date();
+    } else if (data.deliveryStatus === 'waiting') {
+        data.receivedAt = null;
+    }
+
     await prisma.package.update({
         where: { id },
         data,
